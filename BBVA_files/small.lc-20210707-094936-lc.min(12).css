@@ -1,0 +1,10 @@
+.homemicroillustration{position:relative;zoom:1;width:100%;display:block}
+.homemicroillustration::after,.homemicroillustration::before{content:' ';display:block;height:0;width:0;overflow:hidden}
+.homemicroillustration::after{clear:both}
+.homemicroillustration__base{list-style-type:none}
+.homemicroillustration__item{width:100%}
+.homemicroillustration__item .microillustration__component{width:100%}
+.homemicroillustration--white{background-color:#fff}
+.homemicroillustration--100,.homemicroillustration--bbva100{background-color:#f4f4f4}
+@media(min-width:0) and (max-width:599px){.homemicroillustration__base{padding:24px 0}
+}
