@@ -1,0 +1,10 @@
+function SessionTimeoutCounterModule(sessionTimeout){function isSessionInfinite(){return isNaN(sessionTimeout)||sessionTimeout<=0;}
+function isToSameServer(url){var absUrlRegex=new RegExp('^(?:[a-z]+:)?//','i');if(!absUrlRegex.test(url)){return true;}
+var loc=window.location;var pageServer=loc.protocol+'//'+loc.hostname+(loc.port?':'+loc.port:'');return url&&url.indexOf(pageServer)===0;}
+var originalXHROpenMethod=XMLHttpRequest.prototype.open;if(!isSessionInfinite()){$(window).on("load",function(){ApplicationStorage.set('sessionLastUsed',Date.now());if(originalXHROpenMethod!==XMLHttpRequest.prototype.open){return;}
+XMLHttpRequest.prototype.open=function(_,url){if(isToSameServer(url)){this.addEventListener('load',function(){ApplicationStorage.set('sessionLastUsed',Date.now());},false);}
+originalXHROpenMethod.apply(this,arguments);};});}
+return{interval:10000,buffer:-3000,precheck:60000,userWarned:false,timeout:null,ajaxRequestActive:false,reset:function(){var $this=this;if(PrimeFaces.widgets[this.dialogWidgetVar]){PF($this.dialogWidgetVar).hide();}
+ApplicationStorage.set('sessionLastUsed',Date.now());$this.userWarned=false;clearTimeout($this.timeout);$this.timeout=setTimeout(function(){$this.checkSession()},$this.interval);},checkSession:function(){var $this=this;if(GFaces.filesUploading||$this.ajaxRequestActive){$this.timeout=setTimeout(function(){$this.checkSession()},$this.interval);return;}
+var sessionLastUsed=ApplicationStorage.get('sessionLastUsed');var sessionExpiry=sessionLastUsed+(sessionTimeout*1000);var localTime=(new Date()).getTime();if((sessionExpiry+$this.buffer)<=localTime){ApplicationStorage.remove('sessionLastUsed');window.location.href=$this.actionURL;}else{if(!$this.userWarned&&(sessionExpiry-$this.precheck)<=localTime){$this.userWarned=true;PF($this.dialogWidgetVar).show();}
+$this.timeout=setTimeout(function(){$this.checkSession()},$this.interval);}},startTimer:function(actionURL,dialogWidgetVar){this.dialogWidgetVar=dialogWidgetVar;this.actionURL=actionURL;if(!isSessionInfinite()){var $this=this;this.timeout=setTimeout(function(){$this.checkSession()},this.interval);}}}}
