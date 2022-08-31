@@ -1,0 +1,274 @@
+(function () {
+    function populatePrefValues(prefArray, prefName, valuesArray) {
+        let pref; let i; let j; let len; let
+            valLen;
+        for (i = 0, len = prefArray.length; i < len; i++) {
+            if (prefArray[i].name === prefName) {
+                for (j = 0, valLen = valuesArray.length; j < valLen; j++) {
+                    pref = valuesArray[j].split(',');
+                    prefArray[i].inputType.options = prefArray[i].inputType.options || {};
+                    prefArray[i].inputType.options[j] = {
+                        label: pref[0],
+                        value: pref[1],
+                    };
+                }
+            }
+        }
+    }
+
+    const SELECTORS = {
+        NAVBAR_CONTAINER: '.nav-bar-content',
+        NAVBAR_LINKS: '.rb-navbar-links',
+        NAVBAR_BRAND: '.navbar-brand',
+        RB_NAV: '.rb-nav-top',
+    };
+
+    const Container = b$.bdom.getNamespace('http://backbase.com/2013/portalView').getClass('container');
+
+    const showLogin = function() {
+        $('#webWidget').addClass('invisible');
+        $('#launcher').addClass('invisible');
+        if(!$('.ext-bcs-pub-login-web-ng').hasClass('active')) {
+            $('.ext-bcs-pub-login-web-ng').toggleClass('active')
+            .promise()
+            .done( function() {
+                setTimeout(function() {
+                    $('.ext-bcs-pub-login-web-ng').css('z-index', '1050');
+                    $('.main-navbar-overlay').addClass('display');
+                    $('.login-overlay').addClass('display');
+                }, 700);
+            });
+        }
+    }
+
+    const NavigationContainer = Container.extend(function (bdomDocument, node) {
+        Container.apply(this, arguments);
+        this.isPossibleDragTarget = true;
+    }, {
+        localName: 'templateContainerBcsPubNavigation',
+        namespaceURI: 'templates_templateContainerBcsPubNavigation',
+
+            DOMReady: function () {
+            const container = this.htmlNode;
+            const model = b$.getVC(container).model;
+
+            const portal = window.b$ && window.b$.portal;
+
+
+            const homePage = model.getPreference('homePage');
+
+
+                const homePageUrl = portal ? '' + portal.config.serverRoot + '/' + portal.portalName + '/' + homePage : homePage;
+
+
+            const loginPage = model.getPreference('loginPage');
+
+
+                const loginPageUrl = portal ? '' + portal.config.serverRoot + '/' + portal.portalName + '/' + loginPage : loginPage;
+
+
+            const loginBankingEnterprisePage = model.getPreference('loginBankingEnterprisePage');
+
+
+                const loginBankingEnterprisePageUrl = portal ? '' + portal.config.serverRoot + '/' + portal.portalName + '/' + loginBankingEnterprisePage : loginBankingEnterprisePage;
+
+            const isDesignMode = window.bd && window.bd.designMode || window.top && window.top.bd && window.top.bd.designMode;
+            const designModeStylesPath = model.getPreference('designModeStylesPath');
+            const self = this;
+            const resourceSequence = new b$._private.ResourceSequence();
+
+
+            if (!isDesignMode) {
+                $(SELECTORS.NAVBAR_BRAND)
+                    .click(function () {
+                    window.location.href = homePageUrl;
+                });
+                $('#loginPersonas-web')
+                    .click(function () {
+                    window.location.href = loginPageUrl;
+                });
+                $('#loginEmpresarios-web')
+                    .click(function () {
+                    window.location.href = loginBankingEnterprisePageUrl;
+                });
+                $('#loginPersonas-resp')
+                    .click(function () {
+                    window.location.href = loginPageUrl;
+                });
+                $('#loginEmpresarios-resp')
+                    .click(function () {
+                    window.location.href = loginBankingEnterprisePageUrl;
+                });
+
+                $('#btn-web')
+                    .on('show.bs.dropdown', function () {
+                    $('#login-arrow-web').removeClass('icon-arrow-67').addClass('icon-arrow-68');
+                });
+                $('#btn-web')
+                    .on('hide.bs.dropdown', function () {
+                    $('#login-arrow-web').removeClass('icon-arrow-68').addClass('icon-arrow-67');
+                });
+
+                $('#btn-responsive')
+                    .on('show.bs.dropdown', function () {
+                    $('#login-arrow-resp').removeClass('icon-arrow-67').addClass('icon-arrow-68');
+                });
+                $('#btn-responsive')
+                    .on('hide.bs.dropdown', function () {
+                    $('#login-arrow-resp').removeClass('icon-arrow-68').addClass('icon-arrow-67');
+                });
+
+
+                let countElSubNode = 0, countElementsNode = 0, indexNodeG = -1;
+
+                const dataMenuActionable = document.querySelectorAll("#menu-actionable");
+                const btnLog = document.querySelector("#btn-web");
+                btnLog.tabIndex = 0;
+                const dataMenuMain = [];
+
+                dataMenuActionable.forEach((node, i) => {
+                    node.querySelector('ul') != null ? dataMenuMain.push(node) : null;
+                    node.addEventListener('keydown', (e) => {
+                        if (node.querySelector('ul') != null) {
+                            e.keyCode == 13 && e.shiftKey ? node.querySelector('a').click() : null;
+                            if (e.keyCode === 13) {
+                                e.preventDefault();
+                                countElSubNode = 0;
+                                let sub_node = node.querySelector('ul').querySelector('a');
+                                resetDataIndex(false, true, sub_node, dataMenuMain.indexOf(node));
+                                countElementsNode = node.querySelectorAll('li').length;
+                                return false;                    
+                            }
+                            e.keyCode === 9 && node === dataMenuMain[dataMenuMain.length - 1] && !e.shiftKey 
+                                ? resetDataIndex(true, false, btnLog, -1) : null;
+                        }else{
+                            e.keyCode === 13 ? node.querySelector('a').click() : null;
+                            e.keyCode === 9 ? e.shiftKey ? --countElSubNode: ++countElSubNode : null;
+                            e.keyCode === 9 && countElSubNode === -1 
+                                ? resetDataIndex(true, false, null, indexNodeG) : null;
+                            e.keyCode === 9 && countElSubNode === countElementsNode 
+                                ? !isLastIndexBool(node) 
+                                ? resetDataIndex(true, false, null, indexNodeG-1) 
+                                : resetDataIndex(true, false, btnLog, -1) : null;
+                        }
+                        e.stopPropagation();
+                    })
+                });
+
+                const resetDataIndex = (st, st2, n, indexNode) => {
+                    dataMenuActionable.forEach((node) =>  {
+                        if (node.querySelector('ul') != null){
+                            node.tabIndex = st ? 1 : -1;
+                            node.querySelectorAll('li').forEach((n2) => n2.querySelector('a').tabIndex = st2 ? 1 : -1);
+                        }
+                    });
+                    indexNode != -1 ? indexNodeG = indexNode : null;
+                    (n || indexNode != -1) ? n ? n.focus() : dataMenuMain[indexNodeG+1].focus() : null;
+                }
+
+                const isLastIndexBool = (node) => {
+                    if (node.querySelector('ul') == null) {
+                        const data = dataMenuMain[dataMenuMain.length - 1].querySelectorAll('li');
+                        return node === data[data.length - 1] ? true : false;
+                    }
+                    return false;
+                }
+
+                resetDataIndex(true, false, null, -1);
+
+                $('#loginPage').on('click', function () {
+                    showLogin();
+                });
+
+                $('#loginPageMobile').on('click', function () {
+                    $('#bcs-reponsive-btn').trigger('click').promise().done( function() {
+                        showLogin();
+                    });
+                });
+
+                $(document).on("click","#close-login", function() {
+                    $('.main-navbar-overlay').removeClass('display');
+                    $('.login-overlay').removeClass('display');
+                    $('.ext-bcs-pub-login-web-ng').css('z-index', '1020');
+                    $('.ext-bcs-pub-login-web-ng').removeClass('active');
+                });
+            }
+
+            self._setNavPosition();
+                $(window)
+                    .resize(function () {
+                self._setNavPosition();
+            });
+
+            self._toggleNavChildrens();
+
+            if (isDesignMode && designModeStylesPath) {
+                resourceSequence.addURI('text/css', designModeStylesPath.replace(/\$\(contextRoot\)/, b$.portal.config.serverRoot));
+            }
+            resourceSequence.startLoading();
+                $('[data-target="#nav-sidebar-collapse"]')
+                    .click(function (e) {
+                e.preventDefault();
+                $('.rb-row-content').toggleClass('active');
+            });
+        },
+            _setNavPosition: function () {
+            /*
+                    if($(window).width() >= 768){
+                        var navBarContainerWidth = $(SELECTORS.NAVBAR_CONTAINER).outerWidth(),
+                            navLinksWidth = $(SELECTORS.NAVBAR_LINKS).outerWidth(),
+                            navBrandWidth = $(SELECTORS.NAVBAR_BRAND).outerWidth(),
+                            rbNavWidth = $(SELECTORS.RB_NAV).outerWidth();
+
+                        var tmpLeft = (navBarContainerWidth - (navBrandWidth + rbNavWidth)) / 2;
+
+                        $(SELECTORS.RB_NAV).css('left', tmpLeft >= 0 ? tmpLeft : 0);
+                    } else {
+                        $(SELECTORS.RB_NAV).css('left', 0);
+                    }
+                    */
+        },
+            _toggleNavChildrens: function () {
+            $('.icon-arrow-67.bcs-toggle-level').click(function (e) {
+                $(this).parent().addClass('bcs-open');
+            });
+            $('.icon-arrow-68.bcs-toggle-level').click(function () {
+                $(this).parent().removeClass('bcs-open');
+            });
+        },
+    }, {
+            template: function (json) {
+            const data = { item: json.model.originalItem };
+            const sTemplate = window.templates_NavigationContainer.NavigationContainer(data);
+            return sTemplate;
+        },
+        handlers: {
+            'preferences-form': function () {
+                this.helpTexts = {
+                    viewType: {
+                        text: 'Please note. Changing view template isn`t safe for items inside the container.'
+                                    + ' Since a layout may have different set of areas. The structure of the content can be lost.'
+                                    + ' Please save all the nested items outside the navigation container before changing this preference value.',
+                    },
+                };
+                const container = this.htmlNode;
+                const model = b$.getVC(container).model;
+
+                populatePrefValues(
+                    model.preferences.array,
+                    'layoutType',
+                    model.getPreference('layoutTypeList').split(';')
+                );
+                populatePrefValues(
+                    model.preferences.array,
+                    'viewType',
+                    model.getPreference('viewTypeList').split(';')
+                );
+            },
+            preferencesSaved: function (e) {
+                e.target.refreshHTML();
+            },
+        },
+    }
+    );
+}());

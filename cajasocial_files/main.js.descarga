@@ -1,0 +1,159 @@
+/* eslint-disable */
+"use strict";
+
+var xsrf = function () {
+  var requestHeaderName = 'X-BBXSRF';
+  var cookieName = 'BBXSRF';
+
+  $(window).load(function () {
+    var newScript = document.createElement('script');
+    var inlineScript = document.createTextNode("(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-WMZBL3S');"); //const inlineScript = document.createTextNode('(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({\'gtm.start\':new Date().getTime(),event:\'gtm.js\'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!=\'dataLayer\'?\'&l=\'+l:\'\';j.async=true;j.src=\'https://www.googletagmanager.com/gtm.js?id=\'+i+dl;f.parentNode.insertBefore(j,f);})(window,document,\'script\',\'dataLayer\',\'GTM-WW224VQ\')');
+  
+    newScript.appendChild(inlineScript);
+    document.head.appendChild(newScript);
+  });
+  return {
+    getToken: getToken,
+    getRequestHeaderName: getRequestHeaderName,
+    getCookieName: getCookieName,
+    getFieldName: getCookieName
+  };
+
+  function getToken() {
+    var value = "; ".concat(document.cookie);
+    var parts = '';
+    var cookie = getCookieName();
+    parts = value.split("; ".concat(cookie, "="));
+
+    if (parts.length == 2) {
+      var token = parts.pop().split(';').shift();
+      return token;
+    }
+
+    return undefined;
+  }
+
+  function getCookieName() {
+    return cookieName;
+  }
+
+  function getRequestHeaderName() {
+    return requestHeaderName;
+  }
+}();
+
+enableXsrfTokenPrefilter();
+/**
+ * Add a jQuery.ajax prefilter to automatically insert the XSRF token in outgoing requests
+ *
+ * @param {Function()<string>} xsrfToken - A nullary function that returns the xsrf token
+ * @param {Object} xsrfOptions - Configuration containing requestHeader key
+ * @return void
+ */
+
+function enableXsrfTokenPrefilter() {
+  if (!window.jQuery) {
+    return;
+  }
+
+  window.jQuery.ajaxPrefilter(function (xhrOptions, original, xhr) {
+    if (xhrOptions.xsrf === false || xhrOptions.type.toUpperCase() === 'GET') {
+      return;
+    } // set xsrf request header
+
+        // set xsrf request header
+        xhr.setRequestHeader(xsrf.getRequestHeaderName(), xhrOptions.xsrf || xsrf.getToken());
+    });
+}
+
+// Funcionalidad agregada para los Structured Content
+$(window).load(function() {
+
+    // Directory List
+    // Oculta los horarios que no tengan texto
+    $(".bcs-directory-schedule").each(function(k, element) {
+        var text = $(element).text().replace(/\s/g, '');
+        if(!text.length) {
+            $(element).parent().parent().hide();
+        }
+    })
+    .promise()
+    .done( function() {
+        $('.bcs-pub-structured-content-directory-list').removeClass('invisible');
+    });
+
+    // Función utilizada para ordenar los datos recibidos
+    var orderData = function(order, a, b){
+        if(order){
+            return (a < b) ? -1 : (a > b) ? 1 : 0;
+        } else {
+            return (a > b) ? -1 : (a < b) ? 1 : 0;
+        }
+    };
+
+    // FileList
+    // Funcionalidad para ordenar los documentos por título
+    var loadOrderList = function(){
+        $('.bcs-content-files').each(function(i, element){
+            var order = $(this).hasClass('Ascendente');
+            var items = $(element).find('div.bcs-content-files-items').get().sort(function(a,b){
+                var keyA = $(a).attr('aria-sort');
+                var keyB = $(b).attr('aria-sort');
+                return orderData(order, keyA, keyB);
+            });
+            $(this).html(items).fadeIn('slow');
+        })
+        .promise()
+        .done( function() {
+            $('.bcs-pub-structured-content-file-list').removeClass('invisible');
+        });
+    };
+
+    // Product
+    // Funcionalidad para ordenar los documentos relacionados
+    $('.bcs-custom-order-list').each(function(k, element) {
+        var order = $(element).hasClass('Ascendente');
+        var items = $(element).find('li').get().sort(function(a, b) {
+            var keyA = Number($(a).attr('value')) || 0;
+            var keyB = Number($(b).attr('value')) || 0;
+            return orderData(order, keyA, keyB);
+        });
+        $(this).html(items).fadeIn('slow');
+    })
+    .promise()
+    .done( function() {
+        $('.bcs-custom-order-list').removeClass('invisible');
+        if($('.bcs-content-files').length){
+            loadOrderList();
+        }
+    });
+
+    if(location.href.includes('pago-pse') || location.href.includes('login-mi-pago-amigo')) {
+      $('.navbar-brand').off();
+      $('.navbar-brand *').off();
+    }
+});
+
+$(document).ready(function() {
+  if(location.href.includes('pago-pse') || location.href.includes('login-mi-pago-amigo')) {
+    $('#bcs-reponsive-btn').addClass('d-none');
+  }
+
+  // Validación páginas para incluir Chat
+  var url = location.pathname;
+  var validations = ['login', 'login-banca-empresas', 'pago-pse', 'login-mi-pago-amigo'];
+  if (!validations.some(el => url.includes(el))) {
+    loadZendChat();
+  }
+});
+
+// Funcionalidad para agregar script de Chat
+var loadZendChat = function() {
+  var existingScript = document.getElementById('ze-snippet');
+  if (!existingScript) {
+    var script = document.createElement('script');
+    script.src = 'https://static.zdassets.com/ekr/snippet.js?key=cdca7d7a-4278-4618-bb7f-2144876666ac';
+    script.id = 'ze-snippet';
+    $('head').append(script);
+  }
+};

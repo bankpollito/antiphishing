@@ -1,0 +1,45 @@
+// This file was automatically generated from template-container-bcs-pub-page-layout-web.soy.
+// Please don't edit this file by hand.
+
+if (typeof templates_templateContainerBcsPubPageLayout == 'undefined') { var templates_templateContainerBcsPubPageLayout = {}; }
+
+
+templates_templateContainerBcsPubPageLayout.templateContainerBcsPubPageLayout = function(opt_data, opt_ignored) {
+  var output = '<div class="bp-container template-container-bcs-pub-page-layout" data-pid="' + soy.$$escapeHtml(opt_data.item.name) + '"><div id="loadingWrapper"></div><main id="mainElm" class="bp-area content-area template-container-bcs-pub-page-layout--area ' + ((opt_data.item.preferences.loadingControlsEnabled.value == 'true') ? 'd-none' : '') + '">';
+  var childList10 = opt_data.item.children;
+  var childListLen10 = childList10.length;
+  for (var childIndex10 = 0; childIndex10 < childListLen10; childIndex10++) {
+    var childData10 = childList10[childIndex10];
+    output += (parseInt(childData10.preferences.area.value,10) == 0) ? soy.$$filterNoAutoescape("") : '';
+  }
+  output += '</main><footer id="footerElm" class="' + ((opt_data.item.preferences.loadingControlsEnabled.value == 'true') ? 'd-none' : '') + '"><div class="bp-area --area bcs-pub-prefooter">';
+  var childList21 = opt_data.item.children;
+  var childListLen21 = childList21.length;
+  for (var childIndex21 = 0; childIndex21 < childListLen21; childIndex21++) {
+    var childData21 = childList21[childIndex21];
+    output += (parseInt(childData21.preferences.area.value,10) == 2) ? soy.$$filterNoAutoescape("") : '';
+  }
+  output += '</div><div class="bcs-pub-main-footer"><div class="bp-area --area bcs-pub-footer-sfc-logo">';
+  var childList28 = opt_data.item.children;
+  var childListLen28 = childList28.length;
+  for (var childIndex28 = 0; childIndex28 < childListLen28; childIndex28++) {
+    var childData28 = childList28[childIndex28];
+    output += (parseInt(childData28.preferences.area.value,10) == 5) ? soy.$$filterNoAutoescape("") : '';
+  }
+  output += '</div><div class="bp-area --area bcs-pub-footer-sections">';
+  var childList35 = opt_data.item.children;
+  var childListLen35 = childList35.length;
+  for (var childIndex35 = 0; childIndex35 < childListLen35; childIndex35++) {
+    var childData35 = childList35[childIndex35];
+    output += (parseInt(childData35.preferences.area.value,10) == 3) ? soy.$$filterNoAutoescape("") : '';
+  }
+  output += '</div></div><div class="bp-area --area bcs-pub-post-footer">';
+  var childList42 = opt_data.item.children;
+  var childListLen42 = childList42.length;
+  for (var childIndex42 = 0; childIndex42 < childListLen42; childIndex42++) {
+    var childData42 = childList42[childIndex42];
+    output += (parseInt(childData42.preferences.area.value,10) == 4) ? soy.$$filterNoAutoescape("") : '';
+  }
+  output += '</div></footer></div>';
+  return output;
+};

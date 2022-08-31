@@ -1,0 +1,127 @@
+// This file was automatically generated from sidebar-web.soy.
+// Please don't edit this file by hand.
+
+if (typeof templates_templateContainerBcsPubNavigation == 'undefined') { var templates_templateContainerBcsPubNavigation = {}; }
+
+
+templates_templateContainerBcsPubNavigation.templateContainerBcsPubNavigation = function(opt_data, opt_ignored) {
+  var output = '';
+  var layoutType__soy3 = (opt_data.item.preferences.layoutType.value == 'fixed') ? 'container' : (opt_data.item.preferences.layoutType.value == 'fluid') ? 'container-fluid' : '';
+  var navbarType__soy9 = opt_data.item.preferences.stickyNavbar.value == 'true' ? 'fixed-top' : 'sticky-top';
+  output += (opt_data.item.preferences.viewType.value == 'TopNavigationContainer') ? templates_templateContainerBcsPubNavigation.TopNavigationContainer({item: opt_data.item, layoutType: layoutType__soy3, navbarType: navbarType__soy9}) : (opt_data.item.preferences.viewType.value == 'SideNavigationContainer') ? templates_templateContainerBcsPubNavigation.SideNavigationContainer(opt_data) : (opt_data.item.preferences.viewType.value == 'TopSideNavigationContainer') ? templates_templateContainerBcsPubNavigation.TopSideNavigationContainer({item: opt_data.item, layoutType: layoutType__soy3, navbarType: navbarType__soy9}) : '';
+  return output;
+};
+
+
+templates_templateContainerBcsPubNavigation.TopNavigationContainer = function(opt_data, opt_ignored) {
+  var output = '';
+  var navbarSelector__soy25 = '#' + soy.$$escapeHtml(opt_data.item.name) + '-navbar-collapse';
+  output += '<div class="main-navbar-overlay"></div><nav id="main-navbar" class="navbar navbar-light navbar-expand-lg ' + soy.$$escapeHtml(opt_data.navbarType) + ' bp-container bp-NavigationContainer bp-ui-dragRoot" data-pid="' + soy.$$escapeHtml(opt_data.item.name) + '" role="navigation"><div class="pub-nav-container"><div class="nav-bar-content ' + soy.$$escapeHtml(opt_data.layoutType) + '"><div class="navbar-header">' + templates_templateContainerBcsPubNavigation.NavbarToggler({collapseTargetSelector: navbarSelector__soy25}) + templates_templateContainerBcsPubNavigation.NavbarBrand({item: opt_data.item, areaId: 0}) + '</div><div id="' + soy.$$escapeHtml(opt_data.item.name) + '-navbar-collapse" class="collapse navbar-collapse rb-navbar-links">' + templates_templateContainerBcsPubNavigation.TopNavigationArea({item: opt_data.item, areaId: 2, mobileUserAreaId: 3}) + '<div class="dropdown drop-login d-flex justify-content-center" id="btn-responsive"><button type="button" id="loginPageMobile" class="btn-bcs bcs-main dropdown-toggle xs" title="Ingresar">Ingresar <i id="login-arrow-resp" class="icon-bcs icon-arrow-67"></i></button></div></div></div></div></nav>';
+  return output;
+};
+
+
+templates_templateContainerBcsPubNavigation.SideNavigationContainer = function(opt_data, opt_ignored) {
+  return '<div class="page-container bp-container bp-NavigationContainer bp-ui-dragRoot" data-pid="' + soy.$$escapeHtml(opt_data.item.name) + '"><div class="row rb-row-content rb-row-content-left">' + templates_templateContainerBcsPubNavigation.SidebarArea({item: opt_data.item, areaId: 0, mobileUserAreaId: 1}) + templates_templateContainerBcsPubNavigation.ContentArea({item: opt_data.item, areaId: 2}) + '</div></div>';
+};
+
+
+templates_templateContainerBcsPubNavigation.TopSideNavigationContainer = function(opt_data, opt_ignored) {
+  var output = '';
+  var sidebarSelector__soy62 = '#nav-sidebar-collapse';
+  var contentOutlineClass__soy64 = opt_data.item.preferences.stickyNavbar.value == 'true' ? 'sticky-top-outline' : '';
+  output += '<div class="page-container bp-container bp-NavigationContainer bp-ui-dragRoot" data-pid="' + soy.$$escapeHtml(opt_data.item.name) + '"><!-- top navbar --><div class="navbar navbar-default ' + soy.$$escapeHtml(opt_data.navbarType) + ' rb-navbar-top"  role="navigation"><div class="' + soy.$$escapeHtml(opt_data.layoutType) + '"><div class="navbar-header">' + templates_templateContainerBcsPubNavigation.NavbarToggler({collapseTargetSelector: sidebarSelector__soy62}) + templates_templateContainerBcsPubNavigation.NavbarBrand({item: opt_data.item, areaId: 0}) + '</div>' + templates_templateContainerBcsPubNavigation.UserMenuArea({showInMobile: false, item: opt_data.item, areaId: 1}) + '</div></div><!-- side navbar and content --><div class="rb-row-content rb-row-content-left ' + soy.$$escapeHtml(contentOutlineClass__soy64) + '">' + templates_templateContainerBcsPubNavigation.SidebarArea({item: opt_data.item, areaId: 2, mobileUserAreaId: 3}) + templates_templateContainerBcsPubNavigation.ContentArea({item: opt_data.item, areaId: 4}) + '</div></div>';
+  return output;
+};
+
+
+templates_templateContainerBcsPubNavigation.NavbarBrand = function(opt_data, opt_ignored) {
+  var output = '<div class="navbar-brand rb-brand --area bp-area">';
+  if (! (opt_data.item.preferences.loadChildren && opt_data.item.preferences.loadChildren.value == 'false') && opt_data.item.children) {
+    var childList97 = opt_data.item.children;
+    var childListLen97 = childList97.length;
+    for (var childIndex97 = 0; childIndex97 < childListLen97; childIndex97++) {
+      var childData97 = childList97[childIndex97];
+      output += (parseInt(childData97.preferences.area.value,10) == opt_data.areaId) ? soy.$$filterNoAutoescape("") : '';
+    }
+  }
+  output += '</div>';
+  return output;
+};
+
+
+templates_templateContainerBcsPubNavigation.NavbarToggler = function(opt_data, opt_ignored) {
+  return '<button id="bcs-reponsive-btn" name="btn-name-' + soy.$$escapeHtml(opt_data.collapseTargetSelector) + '" class="navbar-toggler" type="button" data-toggle="collapse" data-target="' + soy.$$escapeHtml(opt_data.collapseTargetSelector) + '"><i class="navbar-toggler-icon"></i></button>';
+};
+
+
+templates_templateContainerBcsPubNavigation.UserMenuArea = function(opt_data, opt_ignored) {
+  var output = '';
+  var hiddenClass__soy111 = opt_data.showInMobile == false ? 'd-sm-none' : 'd-sm-block';
+  var hiddeButtonClass__soy112 = opt_data.item.preferences.isPublicLogin.value == 'true' ? 'd-sm-none' : 'd-sm-block';
+  output += '<div class="navbar-nav navbar-right rb-notifications-area --area bp-area ' + soy.$$escapeHtml(hiddenClass__soy111) + ' text-right"><div class="dropdown drop-login ' + soy.$$escapeHtml(hiddeButtonClass__soy112) + '" id="btn-web"><button type="button" id="loginPage" class="btn-bcs bcs-main dropdown-toggle xs" title="Ingresar">Ingresar <i id="login-arrow-web" class="icon-bcs icon-arrow-66"></i></button></div>';
+  if (! (opt_data.item.preferences.loadChildren && opt_data.item.preferences.loadChildren.value == 'false') && opt_data.item.children) {
+    var childList120 = opt_data.item.children;
+    var childListLen120 = childList120.length;
+    for (var childIndex120 = 0; childIndex120 < childListLen120; childIndex120++) {
+      var childData120 = childList120[childIndex120];
+      output += (parseInt(childData120.preferences.area.value,10) == opt_data.areaId) ? soy.$$filterNoAutoescape("") : '';
+    }
+  }
+  output += '</div>';
+  return output;
+};
+
+
+templates_templateContainerBcsPubNavigation.TopNavigationArea = function(opt_data, opt_ignored) {
+  var output = '<div class="navbar-nav rb-nav-top --area bp-area">' + templates_templateContainerBcsPubNavigation.OffScreen({contentElementId: 'rb-content'});
+  if (! (opt_data.item.preferences.loadChildren && opt_data.item.preferences.loadChildren.value == 'false') && opt_data.item.children) {
+    var childList133 = opt_data.item.children;
+    var childListLen133 = childList133.length;
+    for (var childIndex133 = 0; childIndex133 < childListLen133; childIndex133++) {
+      var childData133 = childList133[childIndex133];
+      output += (parseInt(childData133.preferences.area.value,10) == opt_data.areaId) ? soy.$$filterNoAutoescape("") : '';
+    }
+  }
+  output += '</div>' + templates_templateContainerBcsPubNavigation.UserMenuArea({showInMobile: true, item: opt_data.item, areaId: opt_data.mobileUserAreaId});
+  return output;
+};
+
+
+templates_templateContainerBcsPubNavigation.SidebarArea = function(opt_data, opt_ignored) {
+  var output = '';
+  var sidebarColumnClasses__soy145 = opt_data.item.preferences.sidebarColumnClasses.value;
+  output += '<div class="rb-sidebar ' + soy.$$escapeHtml(sidebarColumnClasses__soy145) + '" role="navigation"><div class="rb-sidebar-area --area bp-area">' + templates_templateContainerBcsPubNavigation.OffScreen({contentElementId: 'rb-content'});
+  if (! (opt_data.item.preferences.loadChildren && opt_data.item.preferences.loadChildren.value == 'false') && opt_data.item.children) {
+    var childList153 = opt_data.item.children;
+    var childListLen153 = childList153.length;
+    for (var childIndex153 = 0; childIndex153 < childListLen153; childIndex153++) {
+      var childData153 = childList153[childIndex153];
+      output += (parseInt(childData153.preferences.area.value,10) == opt_data.areaId) ? soy.$$filterNoAutoescape("") : '';
+    }
+  }
+  output += '</div>' + templates_templateContainerBcsPubNavigation.UserMenuArea({showInMobile: true, item: opt_data.item, areaId: opt_data.mobileUserAreaId}) + '</div>';
+  return output;
+};
+
+
+templates_templateContainerBcsPubNavigation.ContentArea = function(opt_data, opt_ignored) {
+  var output = '';
+  var contentColumnClasses__soy166 = opt_data.item.preferences.contentColumnClasses.value;
+  output += '<div id="rb-content" class="rb-content ' + soy.$$escapeHtml(contentColumnClasses__soy166) + ' --area bp-area">';
+  if (! (opt_data.item.preferences.loadChildren && opt_data.item.preferences.loadChildren.value == 'false') && opt_data.item.children) {
+    var childList172 = opt_data.item.children;
+    var childListLen172 = childList172.length;
+    for (var childIndex172 = 0; childIndex172 < childListLen172; childIndex172++) {
+      var childData172 = childList172[childIndex172];
+      output += (parseInt(childData172.preferences.area.value,10) == opt_data.areaId) ? soy.$$filterNoAutoescape("") : '';
+    }
+  }
+  output += '</div>';
+  return output;
+};
+
+
+templates_templateContainerBcsPubNavigation.OffScreen = function(opt_data, opt_ignored) {
+  return '<a href="#' + soy.$$escapeHtml(opt_data.contentElementId) + '"></a>';
+};

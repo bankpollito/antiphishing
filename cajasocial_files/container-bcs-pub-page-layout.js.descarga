@@ -1,0 +1,96 @@
+/* eslint-disable */
+"use strict";
+/* global b$ */
+
+(function () {
+  function showPageContent() {
+    // muestra el contenido del main al usuario, que por defecto está oculto
+    $('#mainElm').removeClass('d-none');
+    $('#footerElm').removeClass('d-none');
+    $('#loadingWrapper').addClass('d-none');
+  }
+
+  function handleLoading(attributes) {
+    var img = new Image();
+    var div = document.getElementById('loadingWrapper');
+    var googleMapsTimeout = false;
+
+    img.onload = function() {
+      div.appendChild(img);
+    };
+
+    img.src = attributes.loadingImagePath.value;
+
+    /**
+     * indica si google maps está presente en la página
+     */
+    function googleMapsIsPresent() {
+      return document.getElementsByTagName('g-map-api').length;
+    }
+
+    /**
+     * indica si los servicios de parámetricas del portal
+     * público ya terminaron de cargar
+     */
+    function parametricsPortalPublicLoaded() {
+      return window.pendingRequests && !window.pendingRequests.filter(function (pr) {
+        return pr.length;
+      }).length;
+    }
+
+    var pendingRequestsInterVal = setInterval(function () { 
+      // si se detecta google maps en la página, espera a que este cargue
+      if (googleMapsIsPresent() && !window.google && !googleMapsTimeout) {
+        return;
+      }
+
+      /**
+       * para mostrar el contenido al usuario, los servicios de portal púlblico deben haber respondido
+       * y las imágines insertadas en el DOM como resultado también
+       */
+      if (parametricsPortalPublicLoaded()) {
+        clearInterval(pendingRequestsInterVal);
+
+        $('#mainElm').imagesLoaded( function() {
+          showPageContent();
+        });
+      }
+    }, 500);
+
+    // tiempo de espera máximo para google maps
+    setTimeout(function () {
+      googleMapsTimeout = true;
+    }, 5000);
+  }
+
+  var Container = b$.bdom.getNamespace('http://backbase.com/2013/portalView').getClass('container');
+  Container.extend(function () {
+    Container.apply(this, arguments);
+    this.isPossibleDragTarget = true;
+  }, {
+    localName: 'templateContainerBcsPubPageLayout',
+    namespaceURI: 'templates_templateContainerBcsPubPageLayout'
+  }, {
+    template: function template(json) {
+      var data = {
+        item: json.model.originalItem
+      };
+      return window[this.namespaceURI][this.localName](data);
+    },
+    handlers: {
+      DOMReady: function DOMReady() {
+        if (this.model && this.model.attributes && this.model.attributes.loadingControlsEnabled && this.model.attributes.loadingControlsEnabled.value === 'true') {
+          handleLoading(this.model.attributes);
+        } else {
+          showPageContent();
+        }
+      },
+      preferencesSaved: function preferencesSaved(event) {
+        if (event.target === this) {
+          console.info('preferencesSaved', this);
+          this.refreshHTML(function (item) {});
+        }
+      }
+    }
+  });
+})();

@@ -1,0 +1,35 @@
+// This file was automatically generated from columns-web.soy.
+// Please don't edit this file by hand.
+
+if (typeof templates_ColumnsWebContainer == 'undefined') { var templates_ColumnsWebContainer = {}; }
+
+
+templates_ColumnsWebContainer.ColumnsWebContainer = function(opt_data, opt_ignored) {
+  var output = '<div data-pid="' + soy.$$escapeHtml(opt_data.item.name) + '" class="' + soy.$$escapeHtml(opt_data.item.preferences.customClassName.value) + ' bp-container bp-ui-dragRoot lp-columns">';
+  var columns__soy8 = opt_data.item.preferences.columns.value.split(',');
+  var columnsClasses__soy9 = opt_data.item.preferences.columnsCSSClasses.value.split(',');
+  if (columns__soy8.length > 1) {
+    var iLimit12 = columns__soy8.length;
+    for (var i12 = 0; i12 < iLimit12; i12++) {
+      output += '<div class="bp-area ' + soy.$$escapeHtml(columnsClasses__soy9[i12]) + ' --area">';
+      var childList16 = opt_data.item.children;
+      var childListLen16 = childList16.length;
+      for (var childIndex16 = 0; childIndex16 < childListLen16; childIndex16++) {
+        var childData16 = childList16[childIndex16];
+        output += (parseInt(childData16.preferences.area.value,10) == i12) ? soy.$$filterNoAutoescape("") : '';
+      }
+      output += '</div>';
+    }
+  } else {
+    output += '<div class="bp-area ' + soy.$$escapeHtml(columnsClasses__soy9[0]) + ' --area">';
+    var childList27 = opt_data.item.children;
+    var childListLen27 = childList27.length;
+    for (var childIndex27 = 0; childIndex27 < childListLen27; childIndex27++) {
+      var childData27 = childList27[childIndex27];
+      output += soy.$$filterNoAutoescape("");
+    }
+    output += '</div>';
+  }
+  output += '</div>';
+  return output;
+};
